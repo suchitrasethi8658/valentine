@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Be My Valentine 💖</title>
 
 <style>
@@ -27,6 +28,7 @@
   h1 {
     font-size: 2.2rem;
     margin-bottom: 30px;
+    padding: 0 10px;
   }
 
   button {
@@ -47,6 +49,7 @@
     background-color: #444;
     color: white;
     position: absolute;
+    transition: left 0.35s ease, top 0.35s ease;
   }
 
   #result {
@@ -85,7 +88,7 @@
 </div>
 
 <script>
-/* ========= CHANGE NAMES HERE ========= */
+/* ========= NAMES ========= */
 const yourName = "Suchitra";
 const theirName = "Abakash";
 
@@ -95,8 +98,9 @@ const noBtn = document.getElementById("no");
 const finalText = document.getElementById("finalText");
 
 let noCount = 0;
+let lastTouchTime = 0;
 
-/* ========= ODIA + ENGLISH NO TEXTS ========= */
+/* ========= NO BUTTON TEXTS ========= */
 const messages = [
   "ନା? Really? 😏",
   "Once more think 🤔",
@@ -119,36 +123,41 @@ function typeText(el, text, speed = 60) {
   }, speed);
 }
 
-/* Initial question */
+/* Initial Question */
 typeText(
   question,
   `Hey ${theirName} 😊  
 ତୁମେ ମୋର Valentine ହେବ କି? 💖`
 );
 
-/* ========= MOVE NO BUTTON (UNIVERSAL) ========= */
-function moveNoButton() {
+/* ========= MOVE NO BUTTON ========= */
+function moveNoButton(isMobile = false) {
   noBtn.innerText = messages[noCount % messages.length];
 
   const maxX = window.innerWidth - noBtn.offsetWidth;
   const maxY = window.innerHeight - noBtn.offsetHeight;
 
-  const x = Math.random() * maxX;
-  const y = Math.random() * maxY;
+  const rangeX = isMobile ? maxX * 0.5 : maxX;
+  const rangeY = isMobile ? maxY * 0.5 : maxY;
 
-  noBtn.style.left = x + "px";
-  noBtn.style.top = y + "px";
+  noBtn.style.left = Math.random() * rangeX + "px";
+  noBtn.style.top = Math.random() * rangeY + "px";
 
   noCount++;
 }
 
-/* 🖱️ Desktop */
-noBtn.addEventListener("mouseover", moveNoButton);
+/* 🖥️ Desktop → hover */
+noBtn.addEventListener("mouseenter", () => {
+  moveNoButton(false);
+});
 
-/* 📱 Android + iPhone */
-noBtn.addEventListener("touchstart", function (e) {
+/* 📱 Mobile → slow touch */
+noBtn.addEventListener("touchstart", (e) => {
   e.preventDefault();
-  moveNoButton();
+  const now = Date.now();
+  if (now - lastTouchTime < 600) return;
+  lastTouchTime = now;
+  moveNoButton(true);
 });
 
 /* ========= HEART RAIN ========= */
@@ -181,14 +190,13 @@ function speakSoftGirl(text) {
   utterance.lang = "en-IN";
   utterance.rate = 0.75;
   utterance.pitch = 1.4;
-  utterance.volume = 1.0;
   window.speechSynthesis.speak(utterance);
 }
 
 /* ========= YES CLICK ========= */
 function yesClick() {
   document.getElementById("yes").style.display = "none";
-  document.getElementById("no").style.display = "none";
+  noBtn.style.display = "none";
   question.style.display = "none";
 
   document.getElementById("result").style.display = "block";
@@ -200,7 +208,7 @@ You are my Valentine!
 (${noCount} times No try କରିଥିଲ 😜)`
   );
 
-  speakSoftGirl("Thank you for saying yes.");
+  speakSoftGirl("I knew it. You will be my Valentine.");
 }
 
 /* ========= WHATSAPP SHARE ========= */
@@ -215,5 +223,4 @@ See this cute Valentine page 😜👇`;
 </script>
 
 </body>
-
 </html>
