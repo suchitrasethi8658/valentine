@@ -22,12 +22,20 @@
   .container {
     text-align: center;
     color: white;
+    width: 100%;
+    max-width: 420px;
+  }
+
+  .play-area {
     position: relative;
+    width: 100%;
+    height: 280px; /* FIXED SAFE ZONE */
+    margin: 0 auto;
   }
 
   h1 {
-    font-size: 2.2rem;
-    margin-bottom: 30px;
+    font-size: 2.1rem;
+    margin-bottom: 25px;
     padding: 0 10px;
   }
 
@@ -49,6 +57,8 @@
     background-color: #444;
     color: white;
     position: absolute;
+    left: 55%;
+    top: 65%;
     transition: left 0.35s ease, top 0.35s ease;
   }
 
@@ -74,10 +84,13 @@
 <body>
 
 <div class="container">
-  <h1 id="question"></h1>
 
-  <button id="yes" onclick="yesClick()">Yes 💘</button>
-  <button id="no">No</button>
+  <div class="play-area">
+    <h1 id="question"></h1>
+
+    <button id="yes" onclick="yesClick()">Yes 💘</button>
+    <button id="no">No</button>
+  </div>
 
   <div id="result">
     <h1 id="finalText"></h1>
@@ -85,6 +98,7 @@
     <br>
     <button id="share" onclick="shareWhatsApp()">Share on WhatsApp 💚</button>
   </div>
+
 </div>
 
 <script>
@@ -100,7 +114,7 @@ const finalText = document.getElementById("finalText");
 let noCount = 0;
 let lastTouchTime = 0;
 
-/* ========= NO BUTTON TEXTS ========= */
+/* ========= NO TEXTS (ODIA + ENGLISH + HINGLISH) ========= */
 const messages = [
   "ନା? Really? 😏",
   "Once more think 🤔",
@@ -130,15 +144,16 @@ typeText(
 ତୁମେ ମୋର Valentine ହେବ କି? 💖`
 );
 
-/* ========= MOVE NO BUTTON ========= */
+/* ========= MOVE NO BUTTON (SAFE) ========= */
 function moveNoButton(isMobile = false) {
   noBtn.innerText = messages[noCount % messages.length];
 
-  const maxX = window.innerWidth - noBtn.offsetWidth;
-  const maxY = window.innerHeight - noBtn.offsetHeight;
+  const area = document.querySelector(".play-area");
+  const maxX = area.clientWidth - noBtn.offsetWidth;
+  const maxY = area.clientHeight - noBtn.offsetHeight;
 
-  const rangeX = isMobile ? maxX * 0.5 : maxX;
-  const rangeY = isMobile ? maxY * 0.5 : maxY;
+  const rangeX = isMobile ? maxX * 0.7 : maxX;
+  const rangeY = isMobile ? maxY * 0.7 : maxY;
 
   noBtn.style.left = Math.random() * rangeX + "px";
   noBtn.style.top = Math.random() * rangeY + "px";
@@ -151,7 +166,7 @@ noBtn.addEventListener("mouseenter", () => {
   moveNoButton(false);
 });
 
-/* 📱 Mobile → slow touch */
+/* 📱 Mobile → touch (slow) */
 noBtn.addEventListener("touchstart", (e) => {
   e.preventDefault();
   const now = Date.now();
@@ -159,30 +174,6 @@ noBtn.addEventListener("touchstart", (e) => {
   lastTouchTime = now;
   moveNoButton(true);
 });
-
-/* ========= HEART RAIN ========= */
-function createHeart() {
-  const heart = document.createElement("div");
-  heart.innerHTML = "❤️";
-  heart.style.position = "fixed";
-  heart.style.left = Math.random() * 100 + "vw";
-  heart.style.top = "-10px";
-  heart.style.fontSize = Math.random() * 25 + 15 + "px";
-  heart.style.animation = "fall 4s linear";
-  document.body.appendChild(heart);
-  setTimeout(() => heart.remove(), 4000);
-}
-setInterval(createHeart, 300);
-
-const style = document.createElement("style");
-style.innerHTML = `
-@keyframes fall {
-  to {
-    transform: translateY(110vh);
-    opacity: 0;
-  }
-}`;
-document.head.appendChild(style);
 
 /* ========= SOFT GIRL VOICE ========= */
 function speakSoftGirl(text) {
@@ -195,10 +186,7 @@ function speakSoftGirl(text) {
 
 /* ========= YES CLICK ========= */
 function yesClick() {
-  document.getElementById("yes").style.display = "none";
-  noBtn.style.display = "none";
-  question.style.display = "none";
-
+  document.querySelector(".play-area").style.display = "none";
   document.getElementById("result").style.display = "block";
 
   typeText(
