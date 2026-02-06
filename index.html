@@ -126,12 +126,29 @@ typeText(
 ତୁମେ ମୋର Valentine ହେବ କି? 💖`
 );
 
-/* ========= NO BUTTON RUN ========= */
-noBtn.addEventListener("mouseover", () => {
+/* ========= MOVE NO BUTTON (UNIVERSAL) ========= */
+function moveNoButton() {
   noBtn.innerText = messages[noCount % messages.length];
-  noBtn.style.left = Math.random() * 80 + "%";
-  noBtn.style.top = Math.random() * 80 + "%";
+
+  const maxX = window.innerWidth - noBtn.offsetWidth;
+  const maxY = window.innerHeight - noBtn.offsetHeight;
+
+  const x = Math.random() * maxX;
+  const y = Math.random() * maxY;
+
+  noBtn.style.left = x + "px";
+  noBtn.style.top = y + "px";
+
   noCount++;
+}
+
+/* 🖱️ Desktop */
+noBtn.addEventListener("mouseover", moveNoButton);
+
+/* 📱 Android + iPhone */
+noBtn.addEventListener("touchstart", function (e) {
+  e.preventDefault();
+  moveNoButton();
 });
 
 /* ========= HEART RAIN ========= */
@@ -162,18 +179,9 @@ document.head.appendChild(style);
 function speakSoftGirl(text) {
   const utterance = new SpeechSynthesisUtterance(text);
   utterance.lang = "en-IN";
-  utterance.rate = 0.75;   // soft & slow
-  utterance.pitch = 1.4;  // feminine
+  utterance.rate = 0.75;
+  utterance.pitch = 1.4;
   utterance.volume = 1.0;
-
-  const voices = window.speechSynthesis.getVoices();
-  for (let v of voices) {
-    if (v.lang.includes("en") && v.name.toLowerCase().includes("female")) {
-      utterance.voice = v;
-      break;
-    }
-  }
-
   window.speechSynthesis.speak(utterance);
 }
 
@@ -192,9 +200,7 @@ You are my Valentine!
 (${noCount} times No try କରିଥିଲ 😜)`
   );
 
-  speakSoftGirl(
-    "Thank you for saying yes. Hahaha"
-  );
+  speakSoftGirl("Thank you for saying yes.");
 }
 
 /* ========= WHATSAPP SHARE ========= */
@@ -209,4 +215,5 @@ See this cute Valentine page 😜👇`;
 </script>
 
 </body>
+
 </html>
