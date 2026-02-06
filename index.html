@@ -27,11 +27,14 @@
   }
 
   .play-area {
-    position: relative;
-    width: 100%;
-    height: 280px; /* FIXED SAFE ZONE */
-    margin: 0 auto;
-  }
+  position: relative;
+  width: 100%;
+  max-width: 420px;
+  min-height: 320px;   /* IMPORTANT */
+  height: auto;
+  padding-bottom: 40px;
+  margin: 0 auto;
+ }
 
   h1 {
     font-size: 2.1rem;
@@ -78,6 +81,12 @@
     background-color: #25D366;
     color: white;
   }
+
+ @media (max-width: 360px) {
+  h1 {
+    font-size: 1.8rem;
+  }
+ }
 </style>
 </head>
 
@@ -212,3 +221,4 @@ See this cute Valentine page 😜👇`;
 
 </body>
 </html>
+
