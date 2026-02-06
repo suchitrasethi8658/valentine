@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Be My Valentine 💖</title>
+
+<style>
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    height: 100vh;
+    background: linear-gradient(135deg, #ff6a88, #ff99ac);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Segoe UI', sans-serif;
+    overflow: hidden;
+  }
+
+  .container {
+    text-align: center;
+    color: white;
+    position: relative;
+  }
+
+  h1 {
+    font-size: 2.2rem;
+    margin-bottom: 30px;
+  }
+
+  button {
+    padding: 12px 26px;
+    font-size: 18px;
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+  }
+
+  #yes {
+    background-color: #ff2f68;
+    color: white;
+    margin-right: 20px;
+  }
+
+  #no {
+    background-color: #444;
+    color: white;
+    position: absolute;
+  }
+
+  #result {
+    display: none;
+    margin-top: 20px;
+  }
+
+  #result img {
+    width: 260px;
+    border-radius: 20px;
+    margin-top: 20px;
+  }
+
+  #share {
+    margin-top: 20px;
+    background-color: #25D366;
+    color: white;
+  }
+</style>
+</head>
+
+<body>
+
+<div class="container">
+  <h1 id="question"></h1>
+
+  <button id="yes" onclick="yesClick()">Yes 💘</button>
+  <button id="no">No</button>
+
+  <div id="result">
+    <h1 id="finalText"></h1>
+    <img src="download.jpg" alt="Love">
+    <br>
+    <button id="share" onclick="shareWhatsApp()">Share on WhatsApp 💚</button>
+  </div>
+</div>
+
+<script>
+/* ========= CHANGE NAMES HERE ========= */
+const yourName = "Suchitra";
+const theirName = "Abakash";
+
+/* ========= ELEMENTS ========= */
+const question = document.getElementById("question");
+const noBtn = document.getElementById("no");
+const finalText = document.getElementById("finalText");
+
+let noCount = 0;
+
+/* ========= ODIA + ENGLISH NO TEXTS ========= */
+const messages = [
+  "ନା? Really? 😏",
+  "Once more think 🤔",
+  "ଏତେ easily no? 🥺",
+  "My heart will break 💔",
+  "Last chance 😈",
+  "You cannot escape 😜",
+  "Yes click kara ❤️",
+  "Destiny says YES 😎"
+];
+
+/* ========= TYPING EFFECT ========= */
+function typeText(el, text, speed = 60) {
+  let i = 0;
+  el.innerHTML = "";
+  const timer = setInterval(() => {
+    el.innerHTML += text.charAt(i);
+    i++;
+    if (i === text.length) clearInterval(timer);
+  }, speed);
+}
+
+/* Initial question */
+typeText(
+  question,
+  `Hey ${theirName} 😊  
+ତୁମେ ମୋର Valentine ହେବ କି? 💖`
+);
+
+/* ========= NO BUTTON RUN ========= */
+noBtn.addEventListener("mouseover", () => {
+  noBtn.innerText = messages[noCount % messages.length];
+  noBtn.style.left = Math.random() * 80 + "%";
+  noBtn.style.top = Math.random() * 80 + "%";
+  noCount++;
+});
+
+/* ========= HEART RAIN ========= */
+function createHeart() {
+  const heart = document.createElement("div");
+  heart.innerHTML = "❤️";
+  heart.style.position = "fixed";
+  heart.style.left = Math.random() * 100 + "vw";
+  heart.style.top = "-10px";
+  heart.style.fontSize = Math.random() * 25 + 15 + "px";
+  heart.style.animation = "fall 4s linear";
+  document.body.appendChild(heart);
+  setTimeout(() => heart.remove(), 4000);
+}
+setInterval(createHeart, 300);
+
+const style = document.createElement("style");
+style.innerHTML = `
+@keyframes fall {
+  to {
+    transform: translateY(110vh);
+    opacity: 0;
+  }
+}`;
+document.head.appendChild(style);
+
+/* ========= SOFT GIRL VOICE ========= */
+function speakSoftGirl(text) {
+  const utterance = new SpeechSynthesisUtterance(text);
+  utterance.lang = "en-IN";
+  utterance.rate = 0.75;   // soft & slow
+  utterance.pitch = 1.4;  // feminine
+  utterance.volume = 1.0;
+
+  const voices = window.speechSynthesis.getVoices();
+  for (let v of voices) {
+    if (v.lang.includes("en") && v.name.toLowerCase().includes("female")) {
+      utterance.voice = v;
+      break;
+    }
+  }
+
+  window.speechSynthesis.speak(utterance);
+}
+
+/* ========= YES CLICK ========= */
+function yesClick() {
+  document.getElementById("yes").style.display = "none";
+  document.getElementById("no").style.display = "none";
+  question.style.display = "none";
+
+  document.getElementById("result").style.display = "block";
+
+  typeText(
+    finalText,
+    `ମୁଁ ଜାଣିଥିଲି 😍 ${theirName} ❤️  
+You are my Valentine!  
+(${noCount} times No try କରିଥିଲ 😜)`
+  );
+
+  speakSoftGirl(
+    "Thank you for saying yes. Hahaha"
+  );
+}
+
+/* ========= WHATSAPP SHARE ========= */
+function shareWhatsApp() {
+  const msg = `I just said YES ❤️  
+See this cute Valentine page 😜👇`;
+  window.open(
+    `https://wa.me/?text=${encodeURIComponent(msg + " " + location.href)}`,
+    "_blank"
+  );
+}
+</script>
+
+</body>
+</html>
